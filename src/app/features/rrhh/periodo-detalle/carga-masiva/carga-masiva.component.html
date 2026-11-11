@@ -1,0 +1,96 @@
+<ui-card
+  [title]="correccion() ? 'Corregir los roles del período' : 'Carga masiva de roles'"
+  [subtitle]="
+    correccion()
+      ? 'Suba los PDF correctos. Primero se revisa qué cambiaría; no se guarda nada hasta que usted confirme.'
+      : 'Un PDF por persona. El nombre de cada archivo debe ser su cédula de 10 dígitos, por ejemplo 1712345675.pdf'
+  "
+>
+  <div class="flex flex-col gap-4">
+    <div
+      class="zona"
+      [class.zona--activa]="arrastrando()"
+      (dragover)="alArrastrar($event)"
+      (dragleave)="arrastrando.set(false)"
+      (drop)="alSoltar($event)"
+    >
+      <p class="m-0 text-sm text-gray-600">Arrastre aquí los PDF o</p>
+      <ui-button variant="outline" icon="@tui.upload" [disabled]="subiendo()" (onClick)="selector.click()">
+        Elegir archivos
+      </ui-button>
+      <input #selector hidden type="file" multiple accept="application/pdf,.pdf" (change)="alElegir($event)" />
+    </div>
+
+    @if (archivosValidos().length > 0 || descartados().length > 0) {
+      <div class="flex flex-wrap items-center gap-2">
+        <ui-badge variant="info">{{ archivosValidos().length }} archivos listos ({{ tamanoTotal() }})</ui-badge>
+        <ui-badge variant="neutral">{{ totalLotes() }} lote(s)</ui-badge>
+        @if (descartados().length > 0) {
+          <ui-badge variant="warning">{{ descartados().length }} descartados</ui-badge>
+        }
+      </div>
+    }
+
+    @if (descartados().length > 0) {
+      <ui-table [columns]="columnasDescartados" [data]="descartados()" emptyMessage="Sin descartados" />
+    }
+
+    @if (error()) {
+      <app-aviso variante="danger">{{ error() }}</app-aviso>
+    }
+
+    <div class="flex flex-wrap gap-2">
+      @if (correccion()) {
+        <ui-button
+          variant="brand"
+          icon="@tui.search"
+          [loading]="revisando()"
+          [disabled]="archivosValidos().length === 0 || subiendo() || !!previa()"
+          (onClick)="revisar()"
+        >
+          Revisar cambios de {{ archivosValidos().length }} archivo(s)
+        </ui-button>
+      } @else {
+        <ui-button
+          variant="brand"
+          icon="@tui.upload"
+          [loading]="subiendo()"
+          [disabled]="archivosValidos().length === 0"
+          (onClick)="subir()"
+        >
+          Subir {{ archivosValidos().length }} archivo(s)
+        </ui-button>
+      }
+      <ui-button variant="ghost" [disabled]="subiendo() || revisando()" (onClick)="limpiar()">Limpiar</ui-button>
+    </div>
+
+    @if (previa(); as revision) {
+      <app-previa-correccion [resumen]="revision" [aplicando]="subiendo()" (confirmar)="subir()" (cancelar)="cancelarPrevia()">
+        <ui-input
+          type="text"
+          label="Motivo de la corrección"
+          placeholder="Por ejemplo: se subió el rol equivocado de una persona"
+          [formControl]="motivo"
+          [customErrorMessages]="mensajesMotivo"
+        />
+      </app-previa-correccion>
+    }
+
+    @if (progreso(); as avance) {
+      <div class="flex flex-col gap-3">
+        <p class="m-0 text-sm text-gray-600">Lote {{ avance.loteActual }} de {{ avance.totalLotes }}</p>
+        <div class="flex flex-wrap items-center gap-2">
+          <ui-badge variant="success">{{ avance.resumen.cargados }} cargados</ui-badge>
+          <ui-badge variant="info">{{ avance.resumen.reemplazados }} reemplazados</ui-badge>
+          <ui-badge variant="neutral">{{ avance.resumen.sinCambios }} sin cambios</ui-badge>
+          <ui-badge [variant]="avance.resumen.rechazados > 0 ? 'danger' : 'neutral'">
+            {{ avance.resumen.rechazados }} rechazados
+          </ui-badge>
+        </div>
+        @if (rechazadosPorServidor().length > 0) {
+          <ui-table [columns]="columnasRechazados" [data]="rechazadosPorServidor()" emptyMessage="Sin rechazados" />
+        }
+      </div>
+    }
+  </div>
+</ui-card>
