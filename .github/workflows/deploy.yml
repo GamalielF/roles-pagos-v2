@@ -1,17 +1,26 @@
-name: Deploy Production
+name: Deploy Test
 
-# Apagado hasta que exista producción: solo se ejecuta a mano desde Actions (Run workflow).
 on:
+  push:
+    branches:
+      - develop
+    paths-ignore:
+      - 'README.md'
+      - '.gitignore'
   workflow_dispatch:
 
 jobs:
-  production-deploy:
+  test-deploy:
     name: Deploy roles-cop-sanjose
+    # El flujo de TI entra a Vault con la identidad de GitHub: necesita id-token, y contents para leer el código
+    permissions:
+      id-token: write
+      contents: read
     uses: COACSanJose/lumen/.github/workflows/deploy-angular.yml@main
     with:
       project_name: roles-cop-sanjose
       base_path: /roles/
-      environment: prod
+      environment: test
     secrets:
       LUMEN_REPO_TOKEN: ${{ secrets.LUMEN_TOKEN }}
-      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST_PROD }}
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST_TEST }}
