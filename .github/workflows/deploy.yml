@@ -11,14 +11,13 @@ on:
 
 jobs:
   test-deploy:
-    name: Deploy roles-cop-sanjose
-    # El flujo de TI entra a Vault con la identidad de GitHub: necesita id-token, y contents para leer el código
+    name: Deploy roles_de_pago_sj
     permissions:
       id-token: write
       contents: read
     uses: COACSanJose/lumen/.github/workflows/deploy-angular.yml@main
     with:
-      project_name: roles-cop-sanjose
+      project_name: roles_de_pago_sj
       base_path: /roles/
       environment: test
     secrets:
