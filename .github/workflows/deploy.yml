@@ -19,5 +19,5 @@ jobs:
       project_name: creditos-cop-sanjose
       environment: prod
     secrets:
-      LUMEN_REPO_TOKEN: ${{ secrets.LUMEN_REPO_TOKEN }}
+      LUMEN_REPO_TOKEN: ${{ secrets.LUMEN_TOKEN }}
       DEPLOY_HOST: ${{ secrets.DEPLOY_HOST_PROD }}
