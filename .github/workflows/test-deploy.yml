@@ -1,5 +1,4 @@
 name: Deploy Test
-
 on:
   push:
     branches:
@@ -7,6 +6,7 @@ on:
     paths-ignore:
       - 'README.md'
       - '.gitignore'
+  workflow_dispatch:
 
 jobs:
   test-deploy:
