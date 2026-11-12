@@ -1,4 +1,5 @@
 name: Deploy Test
+
 on:
   push:
     branches:
@@ -6,11 +7,13 @@ on:
     paths-ignore:
       - 'README.md'
       - '.gitignore'
-  workflow_dispatch:
 
 jobs:
   test-deploy:
     name: Deploy test
+    permissions:
+      id-token: write
+      contents: read
     uses: COACSanJose/lumen/.github/workflows/deploy-angular.yml@main
     with:
       project_name: roles-cop-sanjose

@@ -16,9 +16,10 @@ jobs:
       contents: read
     uses: COACSanJose/lumen/.github/workflows/deploy-angular.yml@main
     with:
-      project_name: roles_de_pago_sj
+      project_name: roles-cop-sanjose
       base_path: /roles/
-      environment: test
+      environment: prod
+      
     secrets:
       LUMEN_REPO_TOKEN: ${{ secrets.LUMEN_TOKEN }}
-      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST_TEST }}
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST_PROD }}
