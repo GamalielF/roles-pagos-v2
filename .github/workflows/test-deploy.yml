@@ -10,7 +10,7 @@ on:
 
 jobs:
   test-deploy:
-    name: Deploy roles-cop-sanjose
+    name: Deploy test
     uses: COACSanJose/lumen/.github/workflows/deploy-angular.yml@main
     with:
       project_name: roles-cop-sanjose

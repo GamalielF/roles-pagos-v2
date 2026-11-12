@@ -4,6 +4,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideClientHydration, withNoHttpTransferCache } from '@angular/platform-browser';
 import { authInterceptor, provideAuth, provideUserProfileLoader } from '@lumen/auth';
 import { provideHttp } from '@lumen/http';
+import { provideCore } from '@lumen/core';
 import { routes } from './app.routes';
 import { env } from '@env';
 import { UserProfileService } from './core/services/user-profile.service';
@@ -37,6 +38,8 @@ export const appConfig: ApplicationConfig = {
       enableDebugMode: env.enableDebugLogin,
     }),
     provideUserProfileLoader(UserProfileService),
-    { provide: LOCALE_ID, useValue: 'es-CO' },
+    provideCore({
+      localeId: 'es-CO',
+    }),
   ],
 };

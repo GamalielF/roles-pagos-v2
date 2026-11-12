@@ -1,17 +1,16 @@
-name: Deploy Test
+name: Deploy Production
 
 on:
   push:
     branches:
-      - develop
+      - main
     paths-ignore:
       - 'README.md'
       - '.gitignore'
-  workflow_dispatch:
 
 jobs:
-  test-deploy:
-    name: Deploy roles_de_pago_sj
+  production-deploy:
+    name: Deploy test
     permissions:
       id-token: write
       contents: read
